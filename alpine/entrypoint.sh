@@ -9,17 +9,6 @@ TS_GINA_GIT_USER=${TS_GINA_GIT_USER:-""}
 TS_GINA_GIT_PASSWD=${TS_GINA_GIT_PASSWD:-""}
 TS_GINA_INTERVAL=${TS_GINA_INTERVAL:-""}
 
-# don't start ts3server with root permissions
-if [ "$1" = 'ts3server' -a "$(id -u)" = '0' ]; then
-    chown -R ts3server /var/ts3server /var/run/ts3server /opt/ts3server
-    exec su-exec ts3server "$0" "$@"
-fi
-
-# have the default inifile as the last parameter
-if [ "$1" = 'ts3server' ]; then
-    set -- "$@" inifile=/var/run/ts3server/ts3server.ini
-fi
-
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
