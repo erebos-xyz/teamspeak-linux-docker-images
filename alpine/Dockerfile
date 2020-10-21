@@ -32,7 +32,7 @@ RUN echo "## Installing base ##" && \
     \
     && echo "## set a very secure root password and enable su ##" \
     && echo "root:ciscocisco" | chpasswd \
-    && chmod u+s /bin/su
+    && chmod u+s /bin/su \
     \
     && echo "## Download and install TeamSpeak3 ##" \
     && apk add --no-cache --virtual .fetch-deps tar \
