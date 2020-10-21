@@ -9,13 +9,14 @@ MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 ARG TEAMSPEAK_CHECKSUM=b1d5876854992bf9f5d7bc6b12be71bee9bfe90185b78c74bc50ed5a02f360a2
 ARG TEAMSPEAK_URL=https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_alpine-3.12.1.tar.bz2
 
-#WORKDIR /opt/ts3server
-ENV PATH "${PATH}:/opt/ts3server"
+WORKDIR /opt/ts3server
+#ENV PATH "${PATH}:/opt/ts3server"
 
 # update, install and cleaning
 RUN echo "## Installing base ##" && \
-    echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.10/main/" >> /etc/apk/main && \
-    echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories && \
+    echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.11/main/" >> /etc/apk/main && \
+    echo "@testing http://dl-cdn.alpinelinux.org/alpine/v3.11/testing/" >> /etc/apk/repositories && \
+    echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.11/community/" >> /etc/apk/repositories && \
     apk upgrade --update-cache --available && \
     \
     apk add --force --no-cache \
