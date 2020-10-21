@@ -14,16 +14,14 @@ WORKDIR /opt/ts3server
 
 # update, install and cleaning
 RUN echo "## Installing base ##" && \
-    echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.11/main/" >> /etc/apk/main && \
-    echo "@testing http://dl-cdn.alpinelinux.org/alpine/v3.11/testing/" >> /etc/apk/repositories && \
     echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.11/community/" >> /etc/apk/repositories && \
     apk upgrade --update-cache --available && \
     \
     apk add --force --no-cache \
-        bash@main \
-        git@main \
-        libstdc++@main \
-        ca-certificates@main \
+        bash \
+        git \
+        libstdc++ \
+        ca-certificates \
         tini@community \
     \
     && echo "## Setup permissions ##" \
