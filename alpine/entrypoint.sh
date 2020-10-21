@@ -1,5 +1,13 @@
-#! /bin/sh
-set -e
+#!/usr/bin/env bash
+
+# terminate on errors
+set -xe
+
+# define as docker compose var or default ""
+TS_GINA_GIT_REPO=${TS_GINA_GIT_REPO:-""}
+TS_GINA_GIT_USER=${TS_GINA_GIT_USER:-""}
+TS_GINA_GIT_PASSWD=${TS_GINA_GIT_PASSWD:-""}
+TS_GINA_INTERVAL=${TS_GINA_INTERVAL:-""}
 
 # don't start ts3server with root permissions
 if [ "$1" = 'ts3server' -a "$(id -u)" = '0' ]; then
@@ -60,6 +68,7 @@ if [ "$1" = 'ts3server' ]; then
         dbsqlcreatepath=${TS3SERVER_DB_SQLCREATEPATH:-create_sqlite}
         dbconnections=${TS3SERVER_DB_CONNECTIONS:-10}
         dbclientkeepdays=${TS3SERVER_DB_CLIENTKEEPDAYS:-30}
+        dblogkeepdays=${TS3SERVER_DBLOGKEEPDAYS:-90}
         logpath=${TS3SERVER_LOG_PATH:-/var/ts3server/logs}
         logquerycommands=${TS3SERVER_LOG_QUERY_COMMANDS:-0}
         logappend=${TS3SERVER_LOG_APPEND:-0}
@@ -76,6 +85,10 @@ if [ "$1" = 'ts3server' ]; then
         ${TS3SERVER_MACHINE_ID:+machine_id=${TS3SERVER_MACHINE_ID}}
         ${TS3SERVER_QUERY_SKIPBRUTEFORCECHECK:+query_skipbruteforcecheck=${TS3SERVER_QUERY_SKIPBRUTEFORCECHECk}}
         ${TS3SERVER_HINTS_ENABLED:+hints_enabled=${TS3SERVER_HINTS_ENABLED}}
+        no_permission_update=${TS3SERVER_NO_PERMISSION_UPDATE:-0}
+        create_default_virtualserver=${TS3SERVER_CREATE_DEFAULT_VIRTUALSERVER:-1}
+        query_buffer_mb=${TS3SERVER_QUERY_BUFFER_MB:-20}
+        clear_database=${TS3SERVER_CLEAR_DATABASE:-0}
 EOF
 
     cat << EOF | sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' > /var/run/ts3server/ts3db.ini
@@ -85,9 +98,23 @@ EOF
         username='${TS3SERVER_DB_USER}'
         password='${TS3SERVER_DB_PASSWORD}'
         database='${TS3SERVER_DB_NAME}'
-        socket=
+        socket='${TS3SERVER_DB_SOCKET:-}'
         wait_until_ready='${TS3SERVER_DB_WAITUNTILREADY:-30}'
 EOF
 fi
 
+# GINAvbs
+# check if git repo is set
+if [[ $TS_GINA_GIT_REPO ]]; then
+	# GINAvbs backup solution
+	echo "ciscocisco" | su -c "wget -qO- https://raw.githubusercontent.com/kleberbaum/GINAvbs/master/init.sh \
+	| bash -s -- \
+	--interval=$TS_GINA_INTERVAL \
+	--repository=https://$TS_GINA_GIT_USER:$TS_GINA_GIT_PASSWD@${TS_GINA_GIT_REPO#*@}"
+fi
+
+# disable root
+echo "ciscocisco" | su -c "chmod u-s /bin/su"
+
+# execute CMD[]
 exec "$@"
