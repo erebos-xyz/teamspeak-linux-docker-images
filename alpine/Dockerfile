@@ -21,7 +21,6 @@ RUN echo "## Installing base ##" && \
         bash \
         ca-certificates \
         libstdc++ \
-        su-exec \
         tini@community \
     \
     && echo "## Setup permissions ##" \
@@ -61,10 +60,10 @@ EXPOSE 9987/udp 10011 30033
 COPY entrypoint.sh /opt/ts3server
 
 # starting via tini as init
-ENTRYPOINT [ "/sbin/tini", "--", "entrypoint.sh" ]
+ENTRYPOINT [ "/sbin/tini", "--", "./entrypoint.sh" ]
 
 # change to none root user
 USER ts3server
 
 # additional post-installation configurations
-CMD [ "ts3server", "inifile=/var/run/ts3server/ts3server.ini" ]
+CMD [ "./ts3server", "inifile=/var/run/ts3server/ts3server.ini" ]
