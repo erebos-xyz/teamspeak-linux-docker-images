@@ -13,7 +13,6 @@ ENV PATH "${PATH}:/opt/ts3server"
 
 # update, install and cleaning
 RUN echo "## Installing base ##" && \
-    echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.10/main/" >> /etc/apk/main && \
     echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories && \
     apk upgrade --update-cache --available && \
     \
