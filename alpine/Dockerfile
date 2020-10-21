@@ -17,11 +17,11 @@ RUN echo "## Installing base ##" && \
     echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories && \
     apk upgrade --update-cache --available && \
     \
-    apk add --force \
-        bash@main \
-        git@main \
-        libstdc++@main \
-        ca-certificates@main \
+    apk add --no-cache \
+        bash \
+        ca-certificates \
+        libstdc++ \
+        su-exec \
         tini@community \
     \
     && echo "## Setup permissions ##" \
