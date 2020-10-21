@@ -67,4 +67,5 @@ ENTRYPOINT [ "/sbin/tini", "--", "entrypoint.sh" ]
 # change to none root user
 USER ts3server
 
-CMD [ "ts3server" ]
+# additional post-installation configurations
+CMD [ "ts3server", "inifile=/var/run/ts3server/ts3server.ini" ]
